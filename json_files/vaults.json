@@ -1,0 +1,12 @@
+[
+    {
+        "name": "vault1",
+        "side": "left",
+        "items":["ast abricat"]
+    },
+    {
+        "name": "vault2",
+        "side": "right",
+        "items":["ast riot","behe"]
+    }
+]

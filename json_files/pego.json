@@ -1,0 +1,132 @@
+[
+    {
+        "drop_off": "DediStation01",
+        "grindables": "GrinderStation01",
+        "crafting_station": "CraftingStation01",
+        "crafting_threshold": 5,
+        "pegos": [
+            {
+                "name": "pego1",
+                "teleporter": "StationPegoBed01",
+                "delay": 4000
+            },
+            {
+                "name": "pego2",
+                "teleporter": "StationPegoBed02",
+                "delay": 4000
+            },
+            {
+                "name": "pego3",
+                "teleporter": "StationPegoBed03",
+                "delay": 4000
+            },
+            {
+                "name": "pego4",
+                "teleporter": "StationPegoBed04",
+                "delay": 4000
+            },
+            {
+                "name": "pego5",
+                "teleporter": "StationPegoBed05",
+                "delay": 4000
+            }
+        ]
+    },
+    {
+        "drop_off": "DediStation02",
+        "grindables": "GrinderStation02",
+        "crafting_station": "CraftingStation02",
+        "crafting_threshold": 5,
+        "pegos": [
+            {
+                "name": "pego8",
+                "teleporter": "StationPegoBed08",
+                "delay": 4000
+            },
+            {
+                "name": "pego9",
+                "teleporter": "StationPegoBed09",
+                "delay": 4000
+            },
+            {
+                "name": "pego10",
+                "teleporter": "StationPegoBed10",
+                "delay": 4000
+            },
+            {
+                "name": "pego11",
+                "teleporter": "StationPegoBed11",
+                "delay": 4000
+            },
+            {
+                "name": "pego12",
+                "teleporter": "StationPegoBed12",
+                "delay": 4000
+            }
+        ]
+    },
+    {
+        "drop_off": "DediStation03",
+        "grindables": "GrinderStation03",
+        "crafting_station": "CraftingStation03",
+        "crafting_threshold": 5,
+        "pegos": [
+            {
+                "name": "pego15",
+                "teleporter": "StationPegoBed15",
+                "delay": 4000
+            },
+            {
+                "name": "pego16",
+                "teleporter": "StationPegoBed16",
+                "delay": 4000
+            },
+            {
+                "name": "pego17",
+                "teleporter": "StationPegoBed17",
+                "delay": 4000
+            },
+            {
+                "name": "pego18",
+                "teleporter": "StationPegoBed18",
+                "delay": 4000
+            },
+            {
+                "name": "pego19",
+                "teleporter": "StationPegoBed19",
+                "delay": 4000
+            }
+        ]
+    },
+    {
+        "drop_off": "DediStation04",
+        "grindables": "GrinderStation04",
+        "pegos": [
+            {
+                "name": "pego22",
+                "teleporter": "StationPegoBed22",
+                "delay": 4000
+            },
+            {
+                "name": "pego23",
+                "teleporter": "StationPegoBed23",
+                "delay": 4000
+            },
+            {
+                "name": "pego24",
+                "teleporter": "StationPegoBed24",
+                "delay": 4000
+            },
+            {
+                "name": "pego25",
+                "teleporter": "StationPegoBed25",
+                "delay": 4000
+            },
+            {
+                "name": "pego26",
+                "teleporter": "StationPegoBed26",
+                "delay": 4000
+            }
+        ]
+    }
+]

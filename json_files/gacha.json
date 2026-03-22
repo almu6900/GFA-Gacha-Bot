@@ -1,0 +1,604 @@
+[
+    {
+        "name": "gacha1",
+        "teleporter": "GachaSeed001",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha2",
+        "teleporter": "GachaSeed001",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha3",
+        "teleporter": "GachaSeed002",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha4",
+        "teleporter": "GachaSeed002",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha5",
+        "teleporter": "GachaSeed003",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha6",
+        "teleporter": "GachaSeed003",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha7",
+        "teleporter": "GachaSeed004",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha8",
+        "teleporter": "GachaSeed004",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha9",
+        "teleporter": "GachaSeed005",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha10",
+        "teleporter": "GachaSeed005",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha11",
+        "teleporter": "GachaSeed006",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha12",
+        "teleporter": "GachaSeed006",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha13",
+        "teleporter": "GachaSeed007",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha14",
+        "teleporter": "GachaSeed007",
+        "resource_type": "element",
+        "side": "right"
+     },
+    {
+        "name": "gacha15",
+        "teleporter": "GachaSeed008",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha16",
+        "teleporter": "GachaSeed008",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha17",
+        "teleporter": "GachaSeed009",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha18",
+        "teleporter": "GachaSeed009",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha19",
+        "teleporter": "GachaSeed010",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha20",
+        "teleporter": "GachaSeed010",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha21",
+        "teleporter": "GachaSeed011",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha22",
+        "teleporter": "GachaSeed011",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha23",
+        "teleporter": "GachaSeed012",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha24",
+        "teleporter": "GachaSeed012",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha25",
+        "teleporter": "GachaSeed013",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha26",
+        "teleporter": "GachaSeed013",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha27",
+        "teleporter": "GachaSeed014",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha28",
+        "teleporter": "GachaSeed014",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha29",
+        "teleporter": "GachaSeed015",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha30",
+        "teleporter": "GachaSeed015",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha31",
+        "teleporter": "GachaSeed016",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha32",
+        "teleporter": "GachaSeed016",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha33",
+        "teleporter": "GachaSeed017",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha34",
+        "teleporter": "GachaSeed017",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha35",
+        "teleporter": "GachaSeed018",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha36",
+        "teleporter": "GachaSeed018",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha37",
+        "teleporter": "GachaSeed019",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha38",
+        "teleporter": "GachaSeed019",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha39",
+        "teleporter": "GachaSeed020",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha40",
+        "teleporter": "GachaSeed020",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha41",
+        "teleporter": "GachaSeed021",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha42",
+        "teleporter": "GachaSeed021",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha43",
+        "teleporter": "GachaSeed022",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha44",
+        "teleporter": "GachaSeed022",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha45",
+        "teleporter": "GachaSeed023",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha46",
+        "teleporter": "GachaSeed023",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha47",
+        "teleporter": "GachaSeed024",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha48",
+        "teleporter": "GachaSeed024",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha49",
+        "teleporter": "GachaSeed025",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha50",
+        "teleporter": "GachaSeed025",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha51",
+        "teleporter": "GachaSeed026",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha52",
+        "teleporter": "GachaSeed026",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha53",
+        "teleporter": "GachaSeed027",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha54",
+        "teleporter": "GachaSeed027",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha55",
+        "teleporter": "GachaSeed028",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha56",
+        "teleporter": "GachaSeed028",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha57",
+        "teleporter": "GachaSeed029",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha58",
+        "teleporter": "GachaSeed029",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha59",
+        "teleporter": "GachaSeed030",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha60",
+        "teleporter": "GachaSeed030",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha61",
+        "teleporter": "GachaSeed031",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha62",
+        "teleporter": "GachaSeed031",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha63",
+        "teleporter": "GachaSeed032",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha64",
+        "teleporter": "GachaSeed032",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha65",
+        "teleporter": "GachaSeed033",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha66",
+        "teleporter": "GachaSeed033",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha67",
+        "teleporter": "GachaSeed034",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha68",
+        "teleporter": "GachaSeed034",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha69",
+        "teleporter": "GachaSeed035",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha70",
+        "teleporter": "GachaSeed035",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha71",
+        "teleporter": "GachaSeed036",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha72",
+        "teleporter": "GachaSeed036",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha73",
+        "teleporter": "GachaSeed037",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha74",
+        "teleporter": "GachaSeed037",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha75",
+        "teleporter": "GachaSeed038",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha76",
+        "teleporter": "GachaSeed038",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha77",
+        "teleporter": "GachaSeed039",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha78",
+        "teleporter": "GachaSeed039",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha79",
+        "teleporter": "GachaSeed040",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha80",
+        "teleporter": "GachaSeed040",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha81",
+        "teleporter": "GachaSeed041",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha82",
+        "teleporter": "GachaSeed041",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha83",
+        "teleporter": "GachaSeed042",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha84",
+        "teleporter": "GachaSeed042",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha85",
+        "teleporter": "GachaSeed043",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha86",
+        "teleporter": "GachaSeed043",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha87",
+        "teleporter": "GachaSeed044",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha88",
+        "teleporter": "GachaSeed044",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha89",
+        "teleporter": "GachaSeed045",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha90",
+        "teleporter": "GachaSeed045",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha91",
+        "teleporter": "GachaSeed046",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha92",
+        "teleporter": "GachaSeed046",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha93",
+        "teleporter": "GachaSeed047",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha94",
+        "teleporter": "GachaSeed047",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha95",
+        "teleporter": "GachaSeed048",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha96",
+        "teleporter": "GachaSeed048",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha97",
+        "teleporter": "GachaSeed049",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha98",
+        "teleporter": "GachaSeed049",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "gacha99",
+        "teleporter": "GachaSeed050",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "gacha100",
+        "teleporter": "GachaSeed050",
+        "resource_type": "element",
+        "side": "right"
+    }
+    
+    
+]
