@@ -273,13 +273,13 @@ def deposit_all(metadata, grindables_tp=None):
         logs.logger.debug("depositing in grinder")
         depo_grinder(metadata)
         
-        # Use the specific grinder passed from the JSON, default to global settings if missing
-        if grindables_tp is None:
-            grindables_tp = settings.grindables
-            
-        grindables_metadata = ASA.stations.custom_stations.get_station_metadata(grindables_tp)
-        ASA.strucutres.teleporter.teleport_not_default(grindables_metadata)
-        logs.logger.debug("collecting grindables")
-        collect_grindables(grindables_metadata)
+        # Only go to the grinder if one was explicitly assigned in pego.json
+        if grindables_tp is not None:
+            grindables_metadata = ASA.stations.custom_stations.get_station_metadata(grindables_tp)
+            ASA.strucutres.teleporter.teleport_not_default(grindables_metadata)
+            logs.logger.debug("collecting grindables")
+            collect_grindables(grindables_metadata)
+        else:
+            logs.logger.warning("No grindables station assigned for this group. Skipping grinder collection.")
     else:
         drop_useless()

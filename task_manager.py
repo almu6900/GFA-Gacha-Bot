@@ -172,8 +172,13 @@ def main(start_pego=None, start_gacha=None, start_trough=None):
     flat_pego_names = [pego["name"] for group in pego_data for pego in group.get("pegos", [])]
     
     for group in pego_data:
-        assigned_drop = group.get("drop_off", settings.drop_off)
-        assigned_grind = group.get("grindables", settings.grindables)
+        assigned_drop = group.get("drop_off")
+        assigned_grind = group.get("grindables")
+
+        if not assigned_drop:
+            logs.logger.error("A pego group in pego.json is missing a 'drop_off' location! Skipping this group.")
+            continue
+        
         crafting_station = group.get("crafting_station", None)
         crafting_threshold = group.get("crafting_threshold", 5)
         group_state = {"runs": 0}
