@@ -288,6 +288,73 @@ async def resume(interaction: discord.Interaction):
     running_tasks.append(bot.loop.create_task(embed_send("active_queue")))
     running_tasks.append(bot.loop.create_task(embed_send("waiting_queue")))
 
+@bot.tree.command(name="apply_ini", description="Closes Ark and applies optimized INI settings from json_files/ini_settings.json")
+async def apply_ini(interaction: discord.Interaction):
+    await interaction.response.defer()
+    
+    import local_player
+    import os
+    import psutil
+    import configparser
+    import time
+    import json
+    import settings
+
+    try:
+        # 1. Load the JSON data
+        json_path = "json_files/ini_settings.json"
+        if not os.path.exists(json_path):
+            await interaction.followup.send("❌ `ini_settings.json` not found in `json_files` folder!")
+            return
+            
+        with open(json_path, "r") as f:
+            ini_data = json.load(f)
+
+        # 2. Safely Close Ark
+        closed = False
+        for proc in psutil.process_iter(['name']):
+            if proc.info['name'] == 'ArkAscended.exe':
+                proc.kill()
+                closed = True
+        
+        if closed:
+            time.sleep(2)
+
+        # 3. Setup Paths (os.makedirs automatically builds the folder if it doesn't exist!)
+        platform_folder = "WinGDK" if settings.game_platform.lower() == "xbox" else "Windows"
+        config_path = os.path.join(local_player.base_path, "ShooterGame", "Saved", "Config", platform_folder)
+        os.makedirs(config_path, exist_ok=True) 
+        
+        gus_path = os.path.join(config_path, "GameUserSettings.ini")
+        input_path = os.path.join(config_path, "input.ini")
+
+        # 4. Update GameUserSettings.ini (Surgical Merge)
+        if "GameUserSettings" in ini_data:
+            parser = configparser.ConfigParser(strict=False) # <--- ADDED strict=False
+            parser.optionxform = str # Prevents configparser from forcing everything to lowercase
+            
+            if os.path.exists(gus_path):
+                parser.read(gus_path)
+            
+            for section, keys in ini_data["GameUserSettings"].items():
+                if not parser.has_section(section):
+                    parser.add_section(section)
+                for key, value in keys.items():
+                    parser.set(section, key, str(value))
+                    
+            with open(gus_path, 'w') as f:
+                parser.write(f)
+
+        # 5. Overwrite/Create Input.ini completely from the JSON array
+        if "Input" in ini_data:
+            with open(input_path, "w") as f:
+                f.write("\n".join(ini_data["Input"]))
+
+        await interaction.followup.send("✅ Ark closed and INI files successfully updated from JSON! You can now restart Ark.")
+
+    except Exception as e:
+        await interaction.followup.send(f"❌ Failed to update INI files: {e}")
+
 @bot.tree.command()
 async def shutdown(interaction: discord.Interaction):
     await interaction.response.send_message("Shutting down script...")
