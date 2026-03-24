@@ -7,24 +7,32 @@ import screen
 import template
 import ASA.strucutres.inventory
 import ASA.player.player_inventory
+import json
+import os
+
+def load_crafting_config():
+    """Loads the crafting queue from json_files/crafting.json"""
+    file_path = "json_files/crafting.json"
+    if os.path.exists(file_path):
+        try:
+            with open(file_path, "r") as f:
+                return json.load(f)
+        except json.JSONDecodeError as e:
+            logs.logger.error(f"Error reading crafting.json: {e}")
+    else:
+        logs.logger.warning("crafting.json not found! Crafting sequence will be skipped.")
+    
+    return {"megalab_crafts": [], "replicator_crafts": []}
 
 def click_structure_slot(slot_number: int):
-    """
-    Calculates the X and Y coordinates for a specific slot (1-12) in the structure's inventory.
-    Assumes a standard 6-column layout.
-    """
-    # Convert from 1-indexed to 0-indexed
+    """Calculates coordinates for a specific slot (1-12) in the structure's inventory."""
     idx = slot_number - 1 
-    
-    # Calculate row and column (6 columns per row)
     col = idx % 6
     row = idx // 6
     
-    # Calculate exact pixels using the predefined inventory grid settings
     x = ASA.strucutres.inventory.inv_slots["x"] + (col * ASA.strucutres.inventory.inv_slots["distance"]) + 30
     y = ASA.strucutres.inventory.inv_slots["y"] + (row * ASA.strucutres.inventory.inv_slots["distance"]) + 30
     
-    # Scale for 1080p if necessary
     if screen.screen_resolution == 1080:
         windows.move_mouse(x * 0.75, y * 0.75)
         time.sleep(0.1 * settings.lag_offset)
@@ -36,6 +44,7 @@ def click_structure_slot(slot_number: int):
 
 def craft():
     logs.logger.info("Starting Crafting Sequence...")
+    crafting_config = load_crafting_config()
 
     # --- 1. MEGALAB INTERACTION ---
     logs.logger.info("Accessing Megalab...")
@@ -45,52 +54,43 @@ def craft():
     
     ASA.strucutres.inventory.open()
     
-    # Safety Check: Megalab 
-    if not template.template_await_true(template.check_template, 1, "makeShift", 0.7):
-        logs.logger.error("Megalab was not opened, retrying now.")
+    if not template.template_await_true(template.check_template, 3, "makeShift", 0.7):
         ASA.strucutres.inventory.close()
         utils.zero()
-        utils.set_yaw(2.24) # Uses set_yaw after zero() to recalibrate CCC
+        utils.set_yaw(2.24)
         utils.set_pitch(0.00)
         time.sleep(0.1 * settings.lag_offset)
         ASA.strucutres.inventory.open()
         
     if template.template_await_true(template.check_template, 1, "inventory", 0.7):
-        # Transfer everything from Megalab
         ASA.strucutres.inventory.transfer_all_from()
         time.sleep(0.2 * settings.lag_offset)
 
-        # Search for unstable element
-        ASA.strucutres.inventory.search_in_object("lement")
-        time.sleep(0.1 * settings.lag_offset)
-        
-        # Click the user-defined slot
-        click_structure_slot(settings.megalab_slot)
-        time.sleep(0.1 * settings.lag_offset)
-        
-        # Press A 'X' times to craft
-        logs.logger.info("Crafting element...")
-        for _ in range(20):
-            utils.press_key("a") 
+        for craft_item in crafting_config.get("megalab_crafts", []):
+            search_term = craft_item.get("search_term", "")
+            slot = craft_item.get("slot", 1)
+            craft_amount = craft_item.get("craft_amount", 1)
+
+            logs.logger.info(f"Crafting '{search_term}' ({craft_amount} times)...")
+            ASA.strucutres.inventory.search_in_object(search_term)
+            time.sleep(0.1 * settings.lag_offset)
             
-        time.sleep(0.1 * settings.lag_offset) 
-        
-        
-        
-        # Search player inventory for "Unstable" and push it back
-        #ASA.player.player_inventory.search_in_inventory("Unstable")
-        #ASA.player.player_inventory.transfer_all_inventory()
-        
+            click_structure_slot(slot)
+            time.sleep(0.1 * settings.lag_offset)
+            
+            for _ in range(craft_amount):
+                utils.press_key("a")
+                time.sleep(0.05)
+                
         ASA.strucutres.inventory.close()
         time.sleep(0.2 * settings.lag_offset)
 
     # --- 2. ELEMENT DEDI DEPOSIT ---
-    # No inventory UI to check here, just a direct interaction
     logs.logger.info("Depositing crafted element to Dedi...")
     utils.fast_set_yaw(-67.09)
     utils.set_pitch(-35.00)
     time.sleep(0.3 * settings.lag_offset)
-    utils.press_key("Use") # Press 'E' to deposit
+    utils.press_key("Use") 
     time.sleep(0.2 * settings.lag_offset)
 
     # --- 3. FIRST VAULT ---
@@ -101,9 +101,7 @@ def craft():
     
     ASA.strucutres.inventory.open()
     
-    # Safety Check: Vault 1
-    if not template.template_await_true(template.check_template, 1, "vault", 0.7):
-        logs.logger.error("First Vault was not opened, retrying now.")
+    if not template.template_await_true(template.check_template, 3, "vault", 0.7):
         ASA.strucutres.inventory.close()
         utils.zero()
         utils.set_yaw(73.71)
@@ -112,7 +110,7 @@ def craft():
         ASA.strucutres.inventory.open()
         
     if template.template_await_true(template.check_template, 1, "inventory", 0.7):
-        ASA.strucutres.inventory.transfer_all_from() # Take all
+        ASA.strucutres.inventory.transfer_all_from() 
         ASA.strucutres.inventory.close()
         time.sleep(0.1 * settings.lag_offset)
 
@@ -124,9 +122,7 @@ def craft():
     
     ASA.strucutres.inventory.open()
     
-    # Safety Check: Replicator 1
-    if not template.template_await_true(template.check_template, 1, "replicator", 0.7):
-        logs.logger.error("Replicator was not opened, retrying now.")
+    if not template.template_await_true(template.check_template, 3, "replicator", 0.7):
         ASA.strucutres.inventory.close()
         utils.zero()
         utils.set_yaw(-107.73)
@@ -135,7 +131,7 @@ def craft():
         ASA.strucutres.inventory.open()
         
     if template.template_await_true(template.check_template, 1, "inventory", 0.7):
-        ASA.player.player_inventory.transfer_all_inventory() # Dump all from player
+        ASA.player.player_inventory.transfer_all_inventory() 
         ASA.strucutres.inventory.close()
         time.sleep(0.1 * settings.lag_offset)
 
@@ -147,9 +143,7 @@ def craft():
     
     ASA.strucutres.inventory.open()
     
-    # Safety Check: Vault 2
-    if not template.template_await_true(template.check_template, 1, "vault", 0.7):
-        logs.logger.error("Second Vault was not opened, retrying now.")
+    if not template.template_await_true(template.check_template, 3, "vault", 0.7):
         ASA.strucutres.inventory.close()
         utils.zero()
         utils.set_yaw(125.39)
@@ -158,7 +152,7 @@ def craft():
         ASA.strucutres.inventory.open()
         
     if template.template_await_true(template.check_template, 1, "inventory", 0.7):
-        ASA.strucutres.inventory.transfer_all_from() # Take all
+        ASA.strucutres.inventory.transfer_all_from() 
         ASA.strucutres.inventory.close()
         time.sleep(0.1 * settings.lag_offset)
 
@@ -170,9 +164,7 @@ def craft():
     
     ASA.strucutres.inventory.open()
     
-# Safety Check: Replicator 2
-    if not template.template_await_true(template.check_template, 1, "replicator", 0.7):
-        logs.logger.error("Replicator was not opened, retrying now.")
+    if not template.template_await_true(template.check_template, 3, "replicator", 0.7):
         ASA.strucutres.inventory.close()
         utils.zero()
         utils.set_yaw(-107.73)
@@ -181,39 +173,35 @@ def craft():
         ASA.strucutres.inventory.open()
 
     if template.template_await_true(template.check_template, 1, "inventory", 0.7):
-        # Dump all from player
         ASA.player.player_inventory.transfer_all_inventory() 
         time.sleep(0.1 * settings.lag_offset)
         
-        # --- FIXED: Popcorn the Polymer ---
         ASA.strucutres.inventory.search_in_object("Polymer")
         time.sleep(0.2 * settings.lag_offset)
         
-        # Click the first slot to unfocus the search bar!
         click_structure_slot(1)
         time.sleep(0.1 * settings.lag_offset)
         
-        # Now it is safe to drop items without typing 'o' in the search bar
         ASA.strucutres.inventory.popcorn_top_row() 
         time.sleep(0.4 * settings.lag_offset)
-        # ----------------------------------
 
-        # Search for the specific item to craft
-        logs.logger.info(f"Searching for {settings.replicator_search_item}...")
-        ASA.strucutres.inventory.search_in_object(settings.replicator_search_item)
-        time.sleep(0.1 * settings.lag_offset)
+        for craft_item in crafting_config.get("replicator_crafts", []):
+            search_term = craft_item.get("search_term", "")
+            slot = craft_item.get("slot", 1)
+            craft_amount = craft_item.get("craft_amount", 1)
 
-        # Click the user-defined slot (This also naturally unfocuses the search bar for crafting!)
-        click_structure_slot(settings.replicator_slot)
-        
-        # Craft the item using a loop
-        logs.logger.info(f"Pressing 'A' {settings.replicator_craft_amount} times to queue crafts...")
-        for _ in range(settings.replicator_craft_amount):
-            utils.press_key("a")
-            time.sleep(0.05)
+            logs.logger.info(f"Searching for '{search_term}'...")
+            ASA.strucutres.inventory.search_in_object(search_term)
+            time.sleep(0.1 * settings.lag_offset)
+
+            click_structure_slot(slot)
+            
+            logs.logger.info(f"Pressing 'A' {craft_amount} times to queue '{search_term}'...")
+            for _ in range(craft_amount):
+                utils.press_key("a")
+                time.sleep(0.05)
         
         ASA.strucutres.inventory.close()
         
-    # Reset pitch so the bot isn't stuck staring at the ceiling/floor
     utils.set_pitch(0)
     logs.logger.info("Crafting sequence complete!")

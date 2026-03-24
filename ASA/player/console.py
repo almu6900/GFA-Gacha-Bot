@@ -72,7 +72,7 @@ def console_ccc():
             utils.press_key("Enter")
             
             # INCREASED WAIT: Give Ark more time to copy the coordinates
-            time.sleep(0.4*settings.lag_offset) 
+            time.sleep(0.1*settings.lag_offset) 
             
             # --- Safe Clipboard Read ---
             try:

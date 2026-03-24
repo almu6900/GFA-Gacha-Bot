@@ -1,0 +1,21 @@
+{
+    "megalab_crafts": [
+        {
+            "search_term": "lement",
+            "slot": 7,
+            "craft_amount": 3
+        }
+    ],
+    "replicator_crafts": [
+        {
+            "search_term": "tek ceiling",
+            "slot": 1,
+            "craft_amount": 2
+        },
+        {
+            "search_term": "tek wall",
+            "slot": 1,
+            "craft_amount": 2
+        }
+    ]
+}

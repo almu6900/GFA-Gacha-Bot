@@ -477,3 +477,36 @@ def verify_text_entered(region_name: str, timeout=1.0) -> bool:
         time.sleep(0.05)
         
     return False
+
+def verify_text_cleared(region_name: str, timeout=1.0) -> bool:
+    """
+    Checks the search bar ROI to ensure Cyan text is NO LONGER present.
+    """
+    start_time = time.time()
+    
+    region = roi_regions[region_name]
+    if screen.screen_resolution == 1440:
+        box_x, box_y, box_w, box_h = region["start_x"], region["start_y"], region["width"], region["height"]
+    else:
+        box_x = max(0, int(region["start_x"] * 0.75) - 5)
+        box_y = max(0, int(region["start_y"] * 0.75) - 5)
+        box_w = int(region["width"] * 0.75) + 10
+        box_h = int(region["height"] * 0.75) + 10
+    
+    # HSV bounds for the Cyan text (RGB: 133, 233, 254)
+    lower_cyan = np.array([75, 50, 180])
+    upper_cyan = np.array([110, 255, 255])
+    
+    while time.time() - start_time < timeout:
+        roi = screen.get_screen_roi(box_x, box_y, box_w, box_h)
+        hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
+        mask = cv2.inRange(hsv, lower_cyan, upper_cyan)
+        
+        # If we see less than 5 cyan pixels, the box is successfully cleared!
+        if cv2.countNonZero(mask) < 5:
+            logs.logger.debug(f"Confirmed {region_name} is cleared.")
+            return True
+            
+        time.sleep(0.05)
+        
+    return False

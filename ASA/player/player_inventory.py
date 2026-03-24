@@ -53,7 +53,6 @@ def search_in_inventory(item:str):
         
         success = False
         
-        # --- THE FIX: 3 Attempts to write and verify the text ---
         for attempt in range(3):
             # 1. Click the box
             windows.move_mouse(x, y)
@@ -63,24 +62,27 @@ def search_in_inventory(item:str):
             windows.click(x, y) 
             time.sleep(0.1 * settings.lag_offset)
             
-            # 2. Highlight and type
+            # 2. CLEAR THE BOX AND VERIFY
             utils.ctrl_a()  
             time.sleep(0.05 * settings.lag_offset)
+            utils.press_key("backspace") # Force delete the highlighted text
+            
+            if not template.verify_text_cleared("search_inventory_active", timeout=0.5):
+                logs.logger.warning(f"Failed to clear player search bar (Attempt {attempt+1}/3). Retrying...")
+                continue # Skip the rest of this loop and try clicking/clearing again
+
+            # 3. Write the new text
             utils.write(item) 
-            
-            
-            # 3. Give the UI a tiny moment to render the text
             time.sleep(0.4 * settings.lag_offset)
 
-            # --- NEW: CRAFTING MENU FIX ---
+            # --- CRAFTING MENU FIX ---
             if template.check_template("crafting_active", 0.7):
                 logs.logger.warning("Crafting menu accidentally opened! Clicking back to Inventory.")
                 windows.click(variables.get_pixel_loc("player_inventory_tab_x"), variables.get_pixel_loc("player_inventory_tab_y"))
                 time.sleep(0.5 * settings.lag_offset)
                 continue # Skip verification and retry this attempt instantly
-            # ------------------------------
             
-            # 4. VERIFY: Does the cyan text exist in the box?
+            # 4. VERIFY TEXT ENTERED
             if template.verify_text_entered("search_inventory_active", timeout=1.0):
                 success = True
                 break # It worked! Break out of the loop.

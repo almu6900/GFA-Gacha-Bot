@@ -31,14 +31,12 @@ def open():
                 template.template_await_false(template.check_template,10,"waiting_inv",0.8)
                 logs.logger.debug(f"{time.time() - start} seconds taken for the reciving remote inventory to go away")
                 break
-            
-        #check state of the char before redoing
-        else:
-            ASA.player.player_state.check_state()
+                
         if attempts >= ASA.config.inventory_open_attempts:
             logs.logger.error(f"unable to open up the objects inventory")
             break
     time.sleep(0.3*settings.lag_offset)    
+
 def close():
     attempts = 0
     while is_open():
@@ -49,10 +47,9 @@ def close():
             
         if attempts >= ASA.config.inventory_close_attempts:
             logs.logger.error(f"unable to close the objects inventory after {attempts} attempts") 
-            #check state of the char the reason we can do it now is that the latter should spam click close inv 
-            ASA.player.player_state.check_state()
             break
-    time.sleep(0.3*settings.lag_offset)    
+    time.sleep(0.3*settings.lag_offset)
+
 #these functions assume that the inventory is already open
 def search_in_object(item:str): 
     if is_open():    
@@ -64,7 +61,6 @@ def search_in_object(item:str):
         
         success = False
         
-        # --- THE FIX: 3 Attempts to write and verify the text ---
         for attempt in range(3):
             # 1. Click the box
             windows.move_mouse(x, y)
@@ -74,29 +70,33 @@ def search_in_object(item:str):
             windows.click(x, y)
             time.sleep(0.1 * settings.lag_offset)
             
-            # 2. Highlight and type
+            # 2. CLEAR THE BOX AND VERIFY
             utils.ctrl_a() 
             time.sleep(0.05 * settings.lag_offset) 
-            utils.write(item) 
+            utils.press_key("backspace") # Force delete the highlighted text
             
-            # 3. Give the UI a tiny moment to render the text
+            if not template.verify_text_cleared("search_object_active", timeout=0.5):
+                logs.logger.warning(f"Failed to clear search bar (Attempt {attempt+1}/3). Retrying...")
+                continue # Skip the rest of this loop and try clicking/clearing again
+            
+            # 3. Write the new text
+            utils.write(item) 
             time.sleep(0.4 * settings.lag_offset)
 
-            # --- NEW: CRAFTING MENU FIX ---
+            # CRAFTING MENU FIX 
             if template.check_template("crafting_active", 0.7):
                 logs.logger.warning("Crafting menu accidentally opened! Clicking back to Inventory.")
                 windows.click(variables.get_pixel_loc("player_inventory_tab_x"), variables.get_pixel_loc("player_inventory_tab_y"))
                 time.sleep(0.5 * settings.lag_offset)
-                continue # Skip verification and retry this attempt instantly
-            # ------------------------------
+                continue 
             
-            # 4. VERIFY: Does the cyan text exist in the box?
+            # 4. VERIFY TEXT ENTERED
             if template.verify_text_entered("search_object_active", timeout=1.0):
                 success = True
                 break # It worked! Break out of the loop.
             else:
                 logs.logger.warning(f"Text not detected in search bar (Attempt {attempt+1}/3). Retrying...")
-                time.sleep(0.2) # Brief pause before the next attempt
+                time.sleep(0.2) 
                 
         if not success:
             logs.logger.error(f"Skipping typing '{item}': Failed to verify text in structure search bar after 3 attempts.")

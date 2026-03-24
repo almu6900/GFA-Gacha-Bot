@@ -355,6 +355,108 @@ async def apply_ini(interaction: discord.Interaction):
     except Exception as e:
         await interaction.followup.send(f"❌ Failed to update INI files: {e}")
 
+@bot.tree.command(name="add_craft", description="Add an item to the crafting queue in crafting.json")
+@app_commands.describe(
+    station="Which station to craft this in",
+    search_term="The exact text to type in the search bar",
+    slot="Inventory slot number (1-12)",
+    amount="How many times to press 'A' to craft"
+)
+@app_commands.choices(station=[
+    app_commands.Choice(name="Replicator", value="replicator_crafts"),
+    app_commands.Choice(name="Megalab", value="megalab_crafts")
+])
+async def add_craft(interaction: discord.Interaction, station: app_commands.Choice[str], search_term: str, slot: int, amount: int):
+    file_path = "json_files/crafting.json"
+    
+    # Default structure
+    data = {"megalab_crafts": [], "replicator_crafts": []}
+    
+    if os.path.exists(file_path):
+        try:
+            with open(file_path, "r") as f:
+                data = json.load(f)
+        except:
+            pass
+            
+    # Append the new task
+    new_task = {
+        "search_term": search_term,
+        "slot": slot,
+        "craft_amount": amount
+    }
+    
+    # Ensure the key exists just in case
+    if station.value not in data:
+        data[station.value] = []
+        
+    data[station.value].append(new_task)
+    
+    with open(file_path, "w") as f:
+        json.dump(data, f, indent=4)
+        
+    await interaction.response.send_message(f"✅ Added `{search_term}` to the `{station.name}` queue!\n*(Slot: {slot}, Amount: {amount})*")
+
+@bot.tree.command(name="clear_crafts", description="Clear the crafting queue for a specific station")
+@app_commands.choices(station=[
+    app_commands.Choice(name="Replicator", value="replicator_crafts"),
+    app_commands.Choice(name="Megalab", value="megalab_crafts"),
+    app_commands.Choice(name="Both", value="both")
+])
+async def clear_crafts(interaction: discord.Interaction, station: app_commands.Choice[str]):
+    file_path = "json_files/crafting.json"
+    data = {"megalab_crafts": [], "replicator_crafts": []}
+    
+    if os.path.exists(file_path):
+        try:
+            with open(file_path, "r") as f:
+                data = json.load(f)
+        except:
+            pass
+            
+    if station.value == "both":
+        data["megalab_crafts"] = []
+        data["replicator_crafts"] = []
+    else:
+        data[station.value] = []
+        
+    with open(file_path, "w") as f:
+        json.dump(data, f, indent=4)
+        
+    await interaction.response.send_message(f"🗑️ Cleared the crafting queue for: `{station.name}`")
+
+@bot.tree.command(name="list_crafts", description="View the current crafting queue")
+async def list_crafts(interaction: discord.Interaction):
+    file_path = "json_files/crafting.json"
+    if not os.path.exists(file_path):
+        await interaction.response.send_message("crafting.json is currently empty.", ephemeral=True)
+        return
+        
+    try:
+        with open(file_path, "r") as f:
+            data = json.load(f)
+    except:
+        await interaction.response.send_message("Error reading crafting.json", ephemeral=True)
+        return
+        
+    msg = "**Current Crafting Queue:**\n\n"
+    
+    msg += "**🔬 Megalab:**\n"
+    if not data.get("megalab_crafts"):
+         msg += "- *Empty*\n"
+    else:
+        for item in data["megalab_crafts"]:
+            msg += f"- `{item['search_term']}` | Slot {item['slot']} | {item['craft_amount']} Crafts\n"
+            
+    msg += "\n**⚙️ Replicator:**\n"
+    if not data.get("replicator_crafts"):
+         msg += "- *Empty*\n"
+    else:
+        for item in data["replicator_crafts"]:
+            msg += f"- `{item['search_term']}` | Slot {item['slot']} | {item['craft_amount']} Crafts\n"
+            
+    await interaction.response.send_message(msg)        
+
 @bot.tree.command()
 async def shutdown(interaction: discord.Interaction):
     await interaction.response.send_message("Shutting down script...")
