@@ -19,13 +19,6 @@ game_platform: str = "Steam" # Change this to "Xbox" if using the Microsoft Stor
 carcha_teleport: str = "CarchaMeatTeleport01" # The name of the teleporter next to Carcha before Ride
 carcha_bed: str = "CarchaMeatBed02" # The name of the bed next to your Carcha
 
-
-replicator_search_item: str = "tek ceiling" # Change this to whatever you are crafting
-replicator_craft_amount: int = 20 # Number of times to press 'A'
-replicator_slot: int = 1 # Crafting Slots (1-12)
-megalab_slot: int = 7 # Crafting Slots (1-12)
-
-
 # YOUR discord channel IDs and bot API key. To find channel IDs enable developer mode in discord and right click the channel to copy ID.
 log_channel_gacha: int = 1478118074501824716
 log_active_queue: int = 1478117785350701147
