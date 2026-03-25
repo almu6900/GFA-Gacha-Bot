@@ -2,15 +2,15 @@
 setlocal enabledelayedexpansion
 
 echo ==========================================
-echo      Ark Gacha Bot - Initial Setup
+echo    Ark Gacha Bot - Initial Setup
 echo ==========================================
 echo.
 
-:: 1. Rename settings_template.py
+:: 1. Copy settings_template.py
 if exist "settings_template.py" (
     if not exist "settings.py" (
-        ren "settings_template.py" "settings.py"
-        echo [SUCCESS] Renamed settings_template.py to settings.py
+        copy "settings_template.py" "settings.py" >nul
+        echo [SUCCESS] Copied settings_template.py to settings.py
     ) else (
         echo [SKIPPED] settings.py already exists.
     )
@@ -18,7 +18,7 @@ if exist "settings_template.py" (
     echo [INFO] settings_template.py not found.
 )
 
-:: 2. Rename JSON templates in the json_files directory
+:: 2. Copy JSON templates in the json_files directory
 if exist "json_files\" (
     cd json_files
     
@@ -29,8 +29,8 @@ if exist "json_files\" (
         set "newname=!filename:_template=!"
         
         if not exist "!newname!" (
-            ren "%%f" "!newname!"
-            echo [SUCCESS] Renamed %%f to !newname!
+            copy "%%f" "!newname!" >nul
+            echo [SUCCESS] Copied %%f to !newname!
         ) else (
             echo [SKIPPED] !newname! already exists.
         )
