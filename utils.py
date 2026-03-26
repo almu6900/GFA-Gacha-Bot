@@ -97,53 +97,36 @@ def post_charecter(char):
 KEYEVENTF_SCANCODE = 0x0008
 
 def write(text):
-    logs.logger.debug(f"Attempting to write '{text}' to clipboard (Max 3 attempts)...")
-    
+    logs.logger.debug(f"Attempting to write '{text}' to clipboard...")
     success = False
     
-    # --- 3 ATTEMPT RETRY LOOP ---
-    for attempt in range(3):
+    # --- 10 ATTEMPT RAPID RETRY LOOP ---
+    for attempt in range(10):
         try:
-            # 1. Save to Clipboard
             win32clipboard.OpenClipboard()
             win32clipboard.EmptyClipboard()
-            win32clipboard.SetClipboardText(text, win32clipboard.CF_UNICODETEXT) # CF_UNICODETEXT prevents silent formatting failures
+            win32clipboard.SetClipboardText(text, win32clipboard.CF_UNICODETEXT)
             win32clipboard.CloseClipboard()
+            success = True
+            break # It worked! Break out of the loop.
             
-            # 2. Verify Clipboard Data
-            win32clipboard.OpenClipboard()
-            if win32clipboard.IsClipboardFormatAvailable(win32clipboard.CF_UNICODETEXT):
-                saved_text = win32clipboard.GetClipboardData(win32clipboard.CF_UNICODETEXT)
-            else:
-                saved_text = None
-            win32clipboard.CloseClipboard()
-            
-            # 3. Check if what is in the clipboard matches what we tried to save
-            if saved_text == text:
-                success = True
-                break # It worked! Break out of the retry loop.
-            else:
-                logs.logger.warning(f"Clipboard verification failed (Attempt {attempt+1}/3). Windows cleared it. Retrying...")
-                
         except Exception as e:
-            logs.logger.warning(f"Clipboard locked by another app: {e} (Attempt {attempt+1}/3). Retrying...")
+            logs.logger.debug(f"Clipboard locked (Attempt {attempt+1}/10): {e}")
             try:
-                win32clipboard.CloseClipboard() # Failsafe close just in case it got stuck open
+                win32clipboard.CloseClipboard() # Failsafe close
             except:
                 pass
-        
-        # Wait 0.2 seconds before the next attempt to let Windows finish whatever it was doing
-        time.sleep(0.2)
-        
+            
+            # Wait a tiny fraction of a second before retrying
+            time.sleep(0.05)
+            
     # --- EXECUTE THE PASTE ---
     if success:
-        logs.logger.debug(f"Confirmed clipboard has exact data. Pasting now.")
-        time.sleep(0.1) # Tiny buffer before pasting to ensure the OS registers the clipboard state globally
-        
+        time.sleep(0.05) # Tiny buffer before pasting to ensure OS registers it
         ctrl_v()
     else:
-        logs.logger.error(f"CRITICAL: Failed to save '{text}' to clipboard after 3 attempts! Aborting paste.")
-
+        logs.logger.error(f"CRITICAL: Failed to save '{text}' to clipboard after 10 attempts! OS is hard-locking it.")
+        
 def ctrl_a(): # hotkey for sending ctrl a 
     ctypes.windll.user32.SendMessageW(windows.hwnd, WM_KEYDOWN, 0x11, 0)
     time.sleep(0.1) # Sliced down from 0.1

@@ -25,21 +25,31 @@ def enter_data(data:str):
         pyautogui.press("up")
     else:
         logs.logger.debug(f"using clipboard to put {data} into the console")
+        success = False
         
-        # --- FIX 1: Safe Clipboard Write ---
-        try:
-            win32clipboard.OpenClipboard()
-            win32clipboard.EmptyClipboard()
-            win32clipboard.SetClipboardText( data, win32clipboard.CF_TEXT )
-            win32clipboard.CloseClipboard()
-        except Exception as e:
-            logs.logger.error(f"Clipboard write failed/locked: {e}")
+        # --- 10 ATTEMPT RAPID RETRY LOOP ---
+        for attempt in range(10):
             try:
-                win32clipboard.CloseClipboard() # Failsafe close
-            except:
-                pass
+                win32clipboard.OpenClipboard()
+                win32clipboard.EmptyClipboard()
+                win32clipboard.SetClipboardText(data, win32clipboard.CF_UNICODETEXT)
+                win32clipboard.CloseClipboard()
+                success = True
+                break
+            except Exception as e:
+                logs.logger.debug(f"Clipboard write failed/locked: {e}")
+                try:
+                    win32clipboard.CloseClipboard()
+                except:
+                    pass
+                time.sleep(0.05)
                 
-        pyautogui.hotkey("ctrl","v")
+        if success:
+            time.sleep(0.05)
+            pyautogui.hotkey("ctrl", "v")
+        else:
+            logs.logger.error(f"Failed to copy console command '{data}' to clipboard.")
+            
     last_command = data
     
 def console_ccc():
@@ -66,7 +76,7 @@ def console_ccc():
                 win32clipboard.CloseClipboard()
             except:
                 pass
-                
+            
             enter_data("ccc")
             time.sleep(0.1*settings.lag_offset)
             utils.press_key("Enter")
@@ -74,18 +84,31 @@ def console_ccc():
             # INCREASED WAIT: Give Ark more time to copy the coordinates
             time.sleep(0.1*settings.lag_offset) 
             
-            # --- Safe Clipboard Read ---
-            try:
-                win32clipboard.OpenClipboard()
-                data = win32clipboard.GetClipboardData()
-                win32clipboard.CloseClipboard()
-            except Exception as e:
-                logs.logger.error(f"Clipboard read failed/locked: {e}. Retrying...")
+            # --- Safe Clipboard Read with Rapid Retry ---
+            data = None
+            for attempt in range(15):
                 try:
+                    win32clipboard.OpenClipboard()
+                    
+                    # Try Unicode first, fallback to standard Text
+                    if win32clipboard.IsClipboardFormatAvailable(win32clipboard.CF_UNICODETEXT):
+                        data = win32clipboard.GetClipboardData(win32clipboard.CF_UNICODETEXT)
+                    elif win32clipboard.IsClipboardFormatAvailable(win32clipboard.CF_TEXT):
+                        data = win32clipboard.GetClipboardData(win32clipboard.CF_TEXT).decode('utf-8')
+                        
                     win32clipboard.CloseClipboard()
-                except:
-                    pass
-                data = None 
+                    
+                    if data:
+                        break # Got the data, break the loop!
+                        
+                except Exception as e:
+                    logs.logger.debug(f"Clipboard read locked (Attempt {attempt+1}/15): {e}")
+                    try:
+                        win32clipboard.CloseClipboard()
+                    except:
+                        pass
+                
+                time.sleep(0.05) # Wait 50ms and try again
 
             # --- NEW FIX 2: Validate the ccc data! ---
             if data != None:

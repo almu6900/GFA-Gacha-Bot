@@ -18,23 +18,37 @@ except Exception as e:
     time.sleep(10)
     exit()
 
+# --- NEW GLOBAL CACHES (Eliminates Disk I/O Lag) ---
+_user_settings_cache = {}
+_input_cache = {}
+
 def get_user_settings(setting_name):
-    # Check the user's setting to determine the folder name
-    if settings.game_platform.lower() == "xbox":
-        platform_folder = "WinGDK"
-    else:
-        platform_folder = "Windows"
-
-    settings_path = os.path.join(base_path, "ShooterGame", "Saved", "Config", platform_folder, "GameUserSettings.ini")
+    global _user_settings_cache
     
-    if not os.path.exists(settings_path):
-        raise FileNotFoundError(f"Settings file not found: {settings_path}")
+    # 1. If cache is empty, read GameUserSettings.ini ONCE
+    if not _user_settings_cache:
+        if settings.game_platform.lower() == "xbox":
+            platform_folder = "WinGDK"
+        else:
+            platform_folder = "Windows"
 
-    with open(settings_path, "r") as file:
-        for line in file:
-            if setting_name in line:
-                key, value = line.strip().split("=")
-                return value
+        settings_path = os.path.join(base_path, "ShooterGame", "Saved", "Config", platform_folder, "GameUserSettings.ini")
+        
+        if not os.path.exists(settings_path):
+            raise FileNotFoundError(f"Settings file not found: {settings_path}")
+
+        with open(settings_path, "r") as file:
+            for line in file:
+                if "=" in line:
+                    key, value = line.strip().split("=", 1) # Split only on the first equals sign
+                    _user_settings_cache[key] = value
+                    
+    # 2. Return from RAM instantly (Handles original substring match logic)
+    for key in _user_settings_cache:
+        if setting_name in key:
+            return _user_settings_cache[key]
+            
+    return None
             
 def get_look_lr_sens():
     return float(get_user_settings("LookLeftRightSensitivity"))
@@ -46,30 +60,37 @@ def get_fov():
     return float(get_user_settings("FOVMultiplier"))
 
 def get_input_settings(input_name):
-    # Check the user's setting to determine the folder name
-    if settings.game_platform.lower() == "xbox":
-        platform_folder = "WinGDK"
-    else:
-        platform_folder = "Windows"
-
-    input_path = os.path.join(base_path, "ShooterGame", "Saved", "Config", platform_folder, "input.ini")
+    global _input_cache
     
-    if not os.path.exists(input_path):
-        raise FileNotFoundError(f"Input settings file not found: {input_path}")
+    # 1. If cache is empty, read input.ini ONCE
+    if not _input_cache:
+        if settings.game_platform.lower() == "xbox":
+            platform_folder = "WinGDK"
+        else:
+            platform_folder = "Windows"
 
-    with open(input_path, "r") as file:
-        if input_name == "ConsoleKeys":
+        input_path = os.path.join(base_path, "ShooterGame", "Saved", "Config", platform_folder, "input.ini")
+        
+        if not os.path.exists(input_path):
+            raise FileNotFoundError(f"Input settings file not found: {input_path}")
+
+        with open(input_path, "r") as file:
             for line in file:
-                if input_name in line:
+                # Catch the ConsoleKeys setting
+                if "ConsoleKeys=" in line:
                     name, value = line.strip().split("=")
-                    return value
-                   
-        for line in file:
-            match = re.match(r'ActionMappings=\(ActionName="([^"]+)",.*Key=([A-Za-z0-9_]+)\)', line.strip())
-            if match:
-                action_name = match.group(1)
-                key = match.group(2)          
-                if action_name == input_name:
-                    return key
-                
-    return input_name
+                    _input_cache["ConsoleKeys"] = value
+                    continue
+                    
+                # Catch standard ActionMappings
+                match = re.match(r'ActionMappings=\(ActionName="([^"]+)",.*Key=([A-Za-z0-9_]+)\)', line.strip())
+                if match:
+                    action_name = match.group(1)
+                    key = match.group(2)          
+                    
+                    # Only save the FIRST mapping found for each action
+                    if action_name not in _input_cache:
+                        _input_cache[action_name] = key
+
+    # 2. Return from RAM instantly
+    return _input_cache.get(input_name, input_name)

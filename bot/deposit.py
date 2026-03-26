@@ -267,6 +267,7 @@ def deposit_all(metadata, grindables_tp=None):
     open_crystals()
     logs.logger.debug("depositing in ele dedi")
     dedi_deposit(settings.height_ele)
+    time.sleep(1.0 * settings.lag_offset)
     vaults(metadata)
     
     if settings.height_grind != 0:

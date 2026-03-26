@@ -115,18 +115,6 @@ def transfer_all_from():
         windows.click(variables.get_pixel_loc("transfer_all_from_x"), variables.get_pixel_loc("transfer_all_y"))
         time.sleep(0.1*settings.lag_offset)
 
-""" def popcorn_top_row():
-    if is_open():
-        for count in range(6):
-            time.sleep(0.1*settings.lag_offset)
-            x = inv_slots["x"] + (count *inv_slots["distance"]) + 30 # x pos = startx + distancebetweenslots * count 
-            y = inv_slots["y"] + 30
-            if screen.screen_resolution == 1080:
-                windows.move_mouse(x * 0.75,y * 0.75)
-            else:
-                windows.move_mouse(x,y)
-            time.sleep(0.1*settings.lag_offset)
-            utils.press_key("DropItem") """
 def popcorn_top_row():
     if is_open():
         # THE FIX: reversed(range(6)) makes it count 5, 4, 3, 2, 1, 0
@@ -140,7 +128,7 @@ def popcorn_top_row():
                 windows.move_mouse(x, y)
                 
             # The optimized 0.05s wait we added earlier
-            time.sleep(0.05) 
+            time.sleep(0.01) 
             utils.press_key("DropItem")
 
 def popcorn_second_row():
@@ -154,14 +142,14 @@ def popcorn_second_row():
                 windows.move_mouse(x * 0.75, y * 0.75)
                 # Force click only on the far-right slot to fix the hover bug
                 if count == 5:
-                    time.sleep(0.05)
+                    time.sleep(0.02)
                     windows.click(x * 0.75, y * 0.75)
             else:
                 windows.move_mouse(x, y)
                 # Force click only on the far-right slot to fix the hover bug
                 if count == 5:
-                    time.sleep(0.05)
+                    time.sleep(0.02)
                     windows.click(x, y)
                 
-            time.sleep(0.05) 
+            time.sleep(0.01) 
             utils.press_key("DropItem")
