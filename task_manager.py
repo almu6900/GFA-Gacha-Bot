@@ -76,10 +76,12 @@ class task_scheduler(metaclass=SingletonMeta):
                 pass
         # ---------------------------------------------------
 
-        if not getattr(task, 'has_run_before', False):
+        if saved_timer:
+            next_execution_time = saved_timer
+        elif not getattr(task, 'has_run_before', False):
             next_execution_time = time.time()  
         else:
-            next_execution_time = time.time() + task.get_requeue_delay()  
+            next_execution_time = time.time() + task.get_requeue_delay() 
         task.has_run_before = True
         self.waiting_queue.add(task, task.get_priority_level(), next_execution_time)
         print(f"Added task {task.name} to waiting queue ") 

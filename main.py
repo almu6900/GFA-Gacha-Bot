@@ -179,6 +179,10 @@ async def trough_autocomplete(interaction: discord.Interaction, current: str) ->
 @app_commands.autocomplete(start_pego=pego_autocomplete, start_gacha=gacha_autocomplete, start_trough=trough_autocomplete)
 async def start(interaction: discord.Interaction, start_pego: str = None, start_gacha: str = None, start_trough: str = None):
     global running_tasks
+
+    if task_manager.started:
+        await interaction.response.send_message("❌ Bot is already running! Please use /shutdown first before restarting or resuming.", ephemeral=True)
+        return
     
     # --- NEW: Erase records if starting fresh ---
     if start_pego is None and start_gacha is None and start_trough is None:
@@ -236,6 +240,10 @@ async def start(interaction: discord.Interaction, start_pego: str = None, start_
 @bot.tree.command(name="resume", description="Automatically resumes the bot from the exact location it was last closed.")
 async def resume(interaction: discord.Interaction):
     global running_tasks
+
+    if task_manager.started:
+        await interaction.response.send_message("❌ Bot is already running! Please use /shutdown first before restarting or resuming.", ephemeral=True)
+        return
     
     # 1. Read the auto-saved state
     state_file = "json_files/bot_state.json"
