@@ -401,7 +401,7 @@ def check_teal_bar(region_name):
     hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
     
     # Define the Teal/Cyan color bounds
-    lower_teal = np.array([80, 150, 100])
+    lower_teal = np.array([80, 150, 150])
     upper_teal = np.array([100, 255, 255])
     
     # Create a mask highlighting ONLY the teal pixels

@@ -163,14 +163,14 @@ def collect_grindables(metadata):
         time.sleep(0.4*settings.lag_offset) 
         
         popcorn_attempts = 0
-        while template.check_teal_bar("Obj_IsEmpty_bar") and popcorn_attempts < 60:
+        while template.check_teal_bar("Obj_IsEmpty_bar") and popcorn_attempts < 20:
             logs.logger.info(f"Grinder still has items. Popcorning top row (Attempt {popcorn_attempts+1})...")
             ASA.strucutres.inventory.popcorn_second_row()
             ASA.strucutres.inventory.popcorn_top_row()
             popcorn_attempts += 1
 
-        if popcorn_attempts >= 60:
-            logs.logger.error("Failed to fully popcorn the grinder after 60 attempts. Inventory might be bugged.")
+        if popcorn_attempts >= 20:
+            logs.logger.error("Failed to fully popcorn the grinder after 20 attempts. Inventory might be bugged.")
 
         if popcorn_attempts > 0:
             ASA.strucutres.inventory.close()
