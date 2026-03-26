@@ -162,16 +162,15 @@ def run_startup_commands():
         console_write(settings.startup_commands)
         time.sleep(3)
         
-        # 3. Press UP arrow twice, then ENTER to bypass the console glitch
-        logs.logger.info("Pressing UP twice and ENTER to reset console history...")
+        # 3. Explicitly write 'ccc' to initialize the console history safely
+        logs.logger.info("Writing 'ccc' to initialize console history...")
         
-        # We need to make sure the console is still open/re-opened to accept these keystrokes
+        # Ensure the console is open
         if not is_open():
             utils.press_key("ConsoleKeys")
             time.sleep(0.5)
             
-        pyautogui.press('up')
-        time.sleep(0.2)
-        pyautogui.press('up')
+        # Write 'ccc' directly (bypassing the double UP arrow hack)
+        enter_data("ccc")
         time.sleep(0.2)
         pyautogui.press('enter')
