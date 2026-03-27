@@ -87,7 +87,6 @@ Click the green `<> Code` button at the top of this repository and select **Down
 *  **The Quick Setup:** Once the bot is running, use the `/apply_ini` command in Discord to automatically inject the required optimized graphics and keybinds into your game.
 *  **Resolution:** Your game MUST be set to either **1920x1080** or **2560x1440**. 
 * **Window Mode:** Windowed mode is highly recommended.  The bot will attempt to automatically snap and resize the window to the top-left corner of your screen when the `/start` command is run.
-* **UI Settings:** Ensure "Item Tooltips" are toggled OFF in your inventory (press `G`), as they can obstruct the search bar.
 
 ---
 
