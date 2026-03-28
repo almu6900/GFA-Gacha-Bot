@@ -12,6 +12,29 @@ import ASA.strucutres.inventory
 import ASA.player.player_inventory
 import bot.config
 
+
+
+def grab_stacks(amount=4):
+    """Calculates the first slot position, clicks it, and presses 'T' a specified number of times."""
+    # 1. Calculate the exact X and Y of the structure's first inventory slot
+    x = ASA.strucutres.inventory.inv_slots["x"] + 30
+    y = ASA.strucutres.inventory.inv_slots["y"] + 30
+    
+    # 2. Move the mouse to that slot, accounting for 1080p vs 1440p
+    if screen.screen_resolution == 1080:
+        windows.click(x * 0.75, y * 0.75)  # Click to ensure the slot is selected
+        windows.move_mouse(x * 0.75, y * 0.75)
+    else:
+        windows.click(x, y)  # Click to ensure the slot is selected
+        windows.move_mouse(x, y)
+
+    time.sleep(0.2 * settings.lag_offset)
+    
+    # 3. Press 'T' (Ark's default transfer hotkey) to grab the stacks
+    for _ in range(amount):
+        utils.press_key("t")
+        time.sleep(0.2 * settings.lag_offset)
+
 def berry_collection():
     time.sleep(0.5)
     ASA.strucutres.inventory.open()
@@ -20,24 +43,8 @@ def berry_collection():
         ASA.strucutres.inventory.search_in_object(settings.berry_type)
         time.sleep(0.1 * settings.lag_offset)
         
-        # 2. Calculate the exact X and Y of the structure's first inventory slot
-        x = ASA.strucutres.inventory.inv_slots["x"] + 30
-        y = ASA.strucutres.inventory.inv_slots["y"] + 30
-        
-        # 3. Move the mouse to that slot, accounting for 1080p vs 1440p
-        if screen.screen_resolution == 1080:
-            windows.click(x * 0.75, y * 0.75)  # Click to ensure the slot is selected
-            windows.move_mouse(x * 0.75, y * 0.75)
-        else:
-            windows.click(x, y)  # Click to ensure the slot is selected
-            windows.move_mouse(x, y)
-
-        time.sleep(0.2 * settings.lag_offset)
-        
-        # 4. Press 'T' (Ark's default transfer hotkey) 4 times to grab 4 stacks
-        for _ in range(4):
-            utils.press_key("t")
-            time.sleep(0.2 * settings.lag_offset)
+        # 2. Use the helper function to pull exactly 4 stacks
+        grab_stacks(amount=4)
             
         ASA.strucutres.inventory.close()
 
@@ -52,12 +59,23 @@ def berry_station():
 def seed(type):
     if ASA.strucutres.inventory.is_open():
         time.sleep(0.1*settings.lag_offset)
-        ASA.strucutres.inventory.transfer_all_from() # doing this should prevent the seed not appearing first try
-        ASA.player.player_inventory.search_in_inventory(settings.berry_type) #iguanadon has 1450 weight for the 145 stacks of berries
+        
+        # --- NEW GENTLE CYCLE ---
+        # Search for berries in the Iguanodon
+        ASA.strucutres.inventory.search_in_object(settings.berry_type)
+        time.sleep(0.1*settings.lag_offset)
+        
+        # Grab exactly 5 stacks to refresh the UI
+        grab_stacks(amount=5)
+        
+        # Search our inventory and put them right back
+        ASA.player.player_inventory.search_in_inventory(settings.berry_type) 
         ASA.player.player_inventory.transfer_all_inventory()
+        # ------------------------
+        
         if type == 2:
             time.sleep(0.2*settings.lag_offset)
-            ASA.player.player_inventory.drop_all_inv() #doing this second time round to drop everything else that is not needed by the bot
+            ASA.player.player_inventory.drop_all_inv() # drop everything else that is not needed
         time.sleep(0.1*settings.lag_offset)
         ASA.player.player_inventory.close()
         time.sleep(0.1*settings.lag_offset)
@@ -65,11 +83,17 @@ def seed(type):
     if not template.template_await_true(template.check_template,1,"seed_inv",0.7):
         logs.logger.debug("iguanadon seeding hasnt been spotted re adding berries")
         ASA.strucutres.inventory.open()
-        #ASA.strucutres.inventory.search_in_object(settings.berry_type)
-        ASA.strucutres.inventory.transfer_all_from()
+        
+        # --- FALLBACK GENTLE CYCLE ---
+        ASA.strucutres.inventory.search_in_object(settings.berry_type)
+        time.sleep(0.1*settings.lag_offset)
+        grab_stacks(amount=5)
+        
         ASA.player.player_inventory.search_in_inventory(settings.berry_type)
         time.sleep(0.1*settings.lag_offset)
         ASA.player.player_inventory.transfer_all_inventory()
+        # -----------------------------
+        
         ASA.strucutres.inventory.close()
         template.template_await_true(template.check_template,1,"seed_inv",0.7)
 
@@ -87,7 +111,7 @@ def seed(type):
             time.sleep(1 * settings.lag_offset)
 
         ASA.strucutres.inventory.search_in_object("seed")
-        time.sleep(0.1*settings.lag_offset) # 
+        time.sleep(0.1*settings.lag_offset) 
         ASA.strucutres.inventory.transfer_all_from()
         time.sleep(0.1*settings.lag_offset)
         ASA.strucutres.inventory.close()

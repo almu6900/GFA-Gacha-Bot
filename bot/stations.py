@@ -377,14 +377,22 @@ class meat_run(base_task):
 
         time.sleep(2 * settings.lag_offset)
 
-        utils.press_key("AccessInventory") 
-        time.sleep(1 * settings.lag_offset)
-        inventory.search_in_object("raw meat")
-        inventory.transfer_all_from()
-        
-        inventory.search_in_object("spoil")
-        inventory.drop_all_obj()
-        inventory.close()
+        inventory.open() 
+        time.sleep(0.2 * settings.lag_offset)
+
+        if inventory.is_open():
+            inventory.search_in_object("raw meat")
+            time.sleep(0.1 * settings.lag_offset)
+            inventory.transfer_all_from()
+            
+            inventory.search_in_object("spoil")
+            time.sleep(0.1 * settings.lag_offset)
+            inventory.drop_all_obj()
+            inventory.close()
+        else:
+            logs.logger.error("Failed to open meat bag! Triggering reset.")
+            player_state.check_state()
+            return
 
         time.sleep(1 * settings.lag_offset) 
         logs.logger.info("Pressing R to teleport back to the base pad...")
