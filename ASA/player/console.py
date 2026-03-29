@@ -11,6 +11,8 @@ import ASA.config
 import pyautogui
 import win32clipboard
 
+
+
 last_command = ""
 
 def is_open():
@@ -47,86 +49,82 @@ def enter_data(data:str):
             pyautogui.hotkey("ctrl", "v")
         else:
             logs.logger.error(f"Failed to copy console command '{data}' to clipboard.")
-             
+            
     last_command = data
     
 def console_ccc():
     data = None
     attempts = 0
-    
-    while data is None:
+    while data == None:
         attempts += 1
         logs.logger.debug(f"trying to get ccc data {attempts} / {ASA.config.console_ccc_attempts}")
-        
-        # 1. Reset state clears any stuck menus (like Tribe Log or Gacha inventory) so the console CAN open
-        ASA.player.player_state.reset_state() 
-        
+        ASA.player.player_state.reset_state() #reset state at the start to make sure we can open up the console window
         count = 0
         while not is_open():
             count += 1
             utils.press_key("ConsoleKeys")
-            template.template_await_true(is_open, 1)
+            template.template_await_true(is_open,1)
             if count >= ASA.config.console_open_attempts:
                 logs.logger.error(f"console didnt open after {count} attempts")
                 break
-                 
+                
         if is_open():
-            # 2. Inject Dummy String into the clipboard
-            dummy_text = "WAITING_FOR_CCC"
+            # --- NEW FIX 1: Clear the clipboard BEFORE typing ccc ---
             try:
                 win32clipboard.OpenClipboard()
                 win32clipboard.EmptyClipboard()
-                win32clipboard.SetClipboardText(dummy_text, win32clipboard.CF_UNICODETEXT)
                 win32clipboard.CloseClipboard()
-            except Exception as e:
-                logs.logger.debug(f"Failed to inject dummy text: {e}")
-                try: win32clipboard.CloseClipboard()
-                except: pass
+            except:
+                pass
             
-            # 3. Execute the command
             enter_data("ccc")
-            time.sleep(0.05 * settings.lag_offset)
+            time.sleep(0.1*settings.lag_offset)
             utils.press_key("Enter")
             
-            # 4. Rapid-Fire Polling: Wait for the clipboard to NOT be the dummy string
-            for attempt in range(20): # 20 attempts * 50ms = Max 1 second wait
+            # INCREASED WAIT: Give Ark more time to copy the coordinates
+            time.sleep(0.1*settings.lag_offset) 
+            
+            # --- Safe Clipboard Read with Rapid Retry ---
+            data = None
+            for attempt in range(15):
                 try:
                     win32clipboard.OpenClipboard()
-                    current_clip = ""
                     
+                    # Try Unicode first, fallback to standard Text
                     if win32clipboard.IsClipboardFormatAvailable(win32clipboard.CF_UNICODETEXT):
-                        current_clip = win32clipboard.GetClipboardData(win32clipboard.CF_UNICODETEXT)
+                        data = win32clipboard.GetClipboardData(win32clipboard.CF_UNICODETEXT)
                     elif win32clipboard.IsClipboardFormatAvailable(win32clipboard.CF_TEXT):
-                        current_clip = win32clipboard.GetClipboardData(win32clipboard.CF_TEXT).decode('utf-8')
+                        data = win32clipboard.GetClipboardData(win32clipboard.CF_TEXT).decode('utf-8')
                         
                     win32clipboard.CloseClipboard()
                     
-                    # If it changed from the dummy text and isn't empty, Ark has written the coordinates!
-                    if current_clip and current_clip != dummy_text:
-                        ccc_parsed = current_clip.split()
+                    if data:
+                        break # Got the data, break the loop!
                         
-                        # Validate it has X, Y, Z, Pitch, Yaw
-                        if len(ccc_parsed) >= 5:
-                            data = ccc_parsed
-                            break # Success! Break out of the polling loop.
-                        else:
-                            logs.logger.warning(f"Invalid CCC data received: {current_clip}")
-                            data = None
-                            break # Break polling loop so it retries typing the command.
-                            
                 except Exception as e:
-                    logs.logger.debug(f"Clipboard read locked (Attempt {attempt+1}/20): {e}")
-                    try: win32clipboard.CloseClipboard()
-                    except: pass
+                    logs.logger.debug(f"Clipboard read locked (Attempt {attempt+1}/15): {e}")
+                    try:
+                        win32clipboard.CloseClipboard()
+                    except:
+                        pass
                 
-                # Wait a tiny 50ms before checking the clipboard again
-                time.sleep(0.05)
+                time.sleep(0.05) # Wait 50ms and try again
 
-        # Check if we hit the max attempts
+            # --- NEW FIX 2: Validate the ccc data! ---
+            if data != None:
+                ccc_data = data.split()
+                # A valid ccc output has at least 5 values (X, Y, Z, Pitch, Yaw)
+                if len(ccc_data) < 5: 
+                    logs.logger.warning(f"Invalid CCC data received (Likely lag). Retrying...")
+                    data = None # Forces the loop to retry getting the CCC data!
+
         if attempts >= ASA.config.console_ccc_attempts:
             logs.logger.error(f"CCC is still returning NONE or invalid after {attempts} attempts")
             break        
-
+            
+    if data != None:    
+        ccc_data = data.split()
+        return ccc_data
     return data
 
 def console_write(text:str):
@@ -144,7 +142,7 @@ def console_write(text:str):
         time.sleep(0.1*settings.lag_offset)
         utils.press_key("Enter")
         
-        time.sleep(0.1*settings.lag_offset) 
+        time.sleep(0.1*settings.lag_offset) # slow to try and prevent opening clipboard to empty data
         
 def run_startup_commands():
     import pyautogui
@@ -154,20 +152,25 @@ def run_startup_commands():
     
     logs.logger.info("Executing startup console commands...")
     
+    # 1. Press END button on the keyboard
     time.sleep(.2)
     pyautogui.press('end')
     time.sleep(1) 
     
+    # 2. Write the commands from settings into the Ark console
     if hasattr(settings, 'startup_commands') and settings.startup_commands:
         console_write(settings.startup_commands)
         time.sleep(3)
         
+        # 3. Explicitly write 'ccc' to initialize the console history safely
         logs.logger.info("Writing 'ccc' to initialize console history...")
         
+        # Ensure the console is open
         if not is_open():
             utils.press_key("ConsoleKeys")
             time.sleep(0.5)
             
+        # Write 'ccc' directly (bypassing the double UP arrow hack)
         enter_data("ccc")
         time.sleep(0.2)
         pyautogui.press('enter')
