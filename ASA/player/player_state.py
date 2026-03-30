@@ -7,6 +7,7 @@ import time
 import settings
 import ASA.config 
 import ASA.player.tribelog
+import ASA.player.console
 import ASA.strucutres.bed
 import ASA.strucutres.teleporter
 import ASA.player.player_inventory
@@ -65,7 +66,6 @@ def check_disconnected():
         time.sleep(60)
 
         # --- NEW: Run startup commands after a crash/restart ---
-        import ASA.player.console
         ASA.player.console.run_startup_commands()
         # -------------------------------------------------------
 
