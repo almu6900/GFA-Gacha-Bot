@@ -8,27 +8,27 @@
             {
                 "name": "pego1",
                 "teleporter": "StationPegoBed01",
-                "delay": 4000
+                "delay": 6000
             },
             {
                 "name": "pego2",
                 "teleporter": "StationPegoBed02",
-                "delay": 4000
+                "delay": 6000
             },
             {
                 "name": "pego3",
                 "teleporter": "StationPegoBed03",
-                "delay": 4000
+                "delay": 6000
             },
             {
                 "name": "pego4",
                 "teleporter": "StationPegoBed04",
-                "delay": 4000
+                "delay": 6000
             },
             {
                 "name": "pego5",
                 "teleporter": "StationPegoBed05",
-                "delay": 4000
+                "delay": 6000
             }
         ]
     },
@@ -39,29 +39,29 @@
         "crafting_threshold": 5,
         "pegos": [
             {
+                "name": "pego6",
+                "teleporter": "StationPegoBed06",
+                "delay": 6000
+            },
+            {
+                "name": "pego7",
+                "teleporter": "StationPegoBed07",
+                "delay": 6000
+            },
+            {
                 "name": "pego8",
                 "teleporter": "StationPegoBed08",
-                "delay": 4000
+                "delay": 6000
             },
             {
                 "name": "pego9",
                 "teleporter": "StationPegoBed09",
-                "delay": 4000
+                "delay": 6000
             },
             {
                 "name": "pego10",
                 "teleporter": "StationPegoBed10",
-                "delay": 4000
-            },
-            {
-                "name": "pego11",
-                "teleporter": "StationPegoBed11",
-                "delay": 4000
-            },
-            {
-                "name": "pego12",
-                "teleporter": "StationPegoBed12",
-                "delay": 4000
+                "delay": 6000
             }
         ]
     },
@@ -72,29 +72,29 @@
         "crafting_threshold": 5,
         "pegos": [
             {
+                "name": "pego11",
+                "teleporter": "StationPegoBed11",
+                "delay": 6000
+            },
+            {
+                "name": "pego12",
+                "teleporter": "StationPegoBed12",
+                "delay": 6000
+            },
+            {
+                "name": "pego13",
+                "teleporter": "StationPegoBed13",
+                "delay": 6000
+            },
+            {
+                "name": "pego14",
+                "teleporter": "StationPegoBed14",
+                "delay": 6000
+            },
+            {
                 "name": "pego15",
                 "teleporter": "StationPegoBed15",
-                "delay": 4000
-            },
-            {
-                "name": "pego16",
-                "teleporter": "StationPegoBed16",
-                "delay": 4000
-            },
-            {
-                "name": "pego17",
-                "teleporter": "StationPegoBed17",
-                "delay": 4000
-            },
-            {
-                "name": "pego18",
-                "teleporter": "StationPegoBed18",
-                "delay": 4000
-            },
-            {
-                "name": "pego19",
-                "teleporter": "StationPegoBed19",
-                "delay": 4000
+                "delay": 6000
             }
         ]
     },
@@ -103,29 +103,29 @@
         "grindables": "GrinderStation04",
         "pegos": [
             {
-                "name": "pego22",
-                "teleporter": "StationPegoBed22",
-                "delay": 4000
+                "name": "pego16",
+                "teleporter": "StationPegoBed16",
+                "delay": 6000
             },
             {
-                "name": "pego23",
-                "teleporter": "StationPegoBed23",
-                "delay": 4000
+                "name": "pego17",
+                "teleporter": "StationPegoBed17",
+                "delay": 6000
             },
             {
-                "name": "pego24",
-                "teleporter": "StationPegoBed24",
-                "delay": 4000
+                "name": "pego18",
+                "teleporter": "StationPegoBed18",
+                "delay": 6000
             },
             {
-                "name": "pego25",
-                "teleporter": "StationPegoBed25",
-                "delay": 4000
+                "name": "pego19",
+                "teleporter": "StationPegoBed19",
+                "delay": 6000
             },
             {
-                "name": "pego26",
-                "teleporter": "StationPegoBed26",
-                "delay": 4000
+                "name": "pego20",
+                "teleporter": "StationPegoBed20",
+                "delay": 6000
             }
         ]
     }
