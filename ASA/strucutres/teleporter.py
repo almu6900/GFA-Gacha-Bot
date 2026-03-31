@@ -106,18 +106,34 @@ def teleport_not_default(arg):
                 logs.logger.error(f"search still detected likely didnt type anything") 
                 break 
                 
-        windows.click(variables.get_pixel_loc("first_bed_slot_x"),variables.get_pixel_loc("first_bed_slot_y")) 
-        time.sleep(0.3*settings.lag_offset) #preventing the orange text from the starting teleport screen messing things up 
-        
-        if not template.template_await_true(template.check_teleporter_orange,3):
-            logs.logger.warning(f"orange pixel for teleporter ready not found likely already on the tp we are just exiting the tp treating it as the tp we should be on") 
-            close() # closing out as either the TP couldnt be found however we still want to change to the station yaw so we still continue 
+        # --- NEW: Dynamic Wait & Click Loop for Slow Server Lag ---
+        tp_ready = False
+        tp_attempts = 0
+
+        # Loop up to 10 times (giving the server ~30-40 seconds to load the UI)
+        while tp_attempts < 10: 
+            windows.click(variables.get_pixel_loc("first_bed_slot_x"), variables.get_pixel_loc("first_bed_slot_y"))
+            time.sleep(0.5 * settings.lag_offset)
+
+            # Check if the "Teleport" button turned orange
+            if template.template_await_true(template.check_teleporter_orange, 3):
+                logs.logger.info("Teleport destination selected and ready!")
+                tp_ready = True
+                break
+
+            logs.logger.warning(f"Destination not ready yet (UI lag). Retrying click... ({tp_attempts + 1}/10)")
+            tp_attempts += 1
+            time.sleep(1) # Brief pause before clicking again to let the UI fetch
+
+        if not tp_ready:
+            logs.logger.warning(f"Orange pixel not found after {tp_attempts} attempts. Likely already on the TP or search failed.")
+            close() 
+            return False # Return False so the task manager knows the teleport failed
 
         else:
-            time.sleep(0.2*settings.lag_offset) 
-            windows.click(variables.get_pixel_loc("first_bed_slot_x"),variables.get_pixel_loc("first_bed_slot_y")) 
-            time.sleep(0.2*settings.lag_offset) 
-            windows.click(variables.get_pixel_loc("spawn_button_x"),variables.get_pixel_loc("spawn_button_y")) 
+            # We don't need to click the bed slot again because our loop just successfully clicked it!
+            time.sleep(0.2 * settings.lag_offset)
+            windows.click(variables.get_pixel_loc("spawn_button_x"), variables.get_pixel_loc("spawn_button_y"))
 
             if template.template_await_true(template.white_flash,2):
                 logs.logger.debug(f"white flash detected waiting for up too 5 seconds") 
@@ -130,7 +146,8 @@ def teleport_not_default(arg):
             utils.current_pitch = 0 
             utils.turn_down(80) 
             time.sleep(0.2) 
-        utils.turn_up(80) 
-        time.sleep(0.2)  
-        utils.set_yaw(stationdata.yaw)
-        return True
+            
+    utils.turn_up(80) 
+    time.sleep(0.2)  
+    utils.set_yaw(stationdata.yaw)
+    return True
