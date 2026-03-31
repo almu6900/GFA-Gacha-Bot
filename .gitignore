@@ -2,8 +2,13 @@
 /__pycache__
 *.pyc
 settings.py
+
 # Ignore all JSON files in the json_files folder
 json_files/*.json
 
 # EXCEPT files that have "_template" in the name
 !json_files/*_template.json
+
+# Ignore specific log files
+logs/logs.txt
+logs/crash_log.txt

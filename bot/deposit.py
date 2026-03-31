@@ -223,6 +223,7 @@ def collect_grindables(metadata):
     
     ASA.strucutres.inventory.open()
     if ASA.strucutres.inventory.is_open():
+        ASA.strucutres.inventory.auto_stack()
         #time.sleep(0.2 * settings.lag_offset)
         ASA.player.player_inventory.search_in_inventory("poly")
         ASA.player.player_inventory.transfer_all_inventory()
@@ -239,6 +240,7 @@ def collect_grindables(metadata):
     
     ASA.strucutres.inventory.open()
     if ASA.strucutres.inventory.is_open():
+        ASA.strucutres.inventory.auto_stack()
         #time.sleep(0.2 * settings.lag_offset)
         ASA.player.player_inventory.search_in_inventory("poly")
         ASA.player.player_inventory.transfer_all_inventory()

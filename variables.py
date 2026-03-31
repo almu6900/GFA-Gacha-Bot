@@ -36,7 +36,9 @@ data = {
     "player_inventory_tab_x": 270,
     "player_inventory_tab_y": 170,
     "teleport_back_btn_x": 240,
-    "teleport_back_btn_y": 1287
+    "teleport_back_btn_y": 1287,
+    "auto_stack_x": 2176,
+    "auto_stack_y": 265
 }
 
 def get_pixel_loc(location):

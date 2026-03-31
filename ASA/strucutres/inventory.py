@@ -115,6 +115,13 @@ def transfer_all_from():
         windows.click(variables.get_pixel_loc("transfer_all_from_x"), variables.get_pixel_loc("transfer_all_y"))
         time.sleep(0.1*settings.lag_offset)
 
+def auto_stack(): 
+    if is_open():
+        logs.logger.debug(f"clicking auto stack in object")
+        time.sleep(0.2*settings.lag_offset)
+        windows.click(variables.get_pixel_loc("auto_stack_x"), variables.get_pixel_loc("auto_stack_y"))
+        time.sleep(0.1*settings.lag_offset)
+        
 def popcorn_top_row():
     if is_open():
         # THE FIX: reversed(range(6)) makes it count 5, 4, 3, 2, 1, 0
