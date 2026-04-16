@@ -31,6 +31,10 @@ def close():
             if is_dead():
                 logs.logger.error("We are on the Death Screen. Cannot close map. Aborting close attempt.")
                 break # Stop trying to click empty space!
+            else:
+                # --- NEW FALLBACK CODE ---
+                logs.logger.warning("Trying to click default cancel/back coordinate anyway.")
+                windows.click(variables.get_pixel_loc("back_button_tp_x"), variables.get_pixel_loc("back_button_tp_y"))
                 
         time.sleep(0.5 * settings.lag_offset)
 
